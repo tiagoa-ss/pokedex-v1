@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { Col, Row, Card } from 'react-bootstrap';
+
+import { usePokemon, usePokemons } from './services/queries';
+import { capitalize } from './utils/capitalizee';
 
 function App() {
-  const [count, setCount] = useState(0)
+	const pokemonsQuery = usePokemons();
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	const pokemonsIds = pokemonsQuery.data?.results.map((pokemon) => {
+		return +pokemon.url
+			.replace('https://pokeapi.co/api/v2/pokemon/', '')
+			.replace('/', '');
+	});
+
+	const pokemonQuery = usePokemon(pokemonsIds);
+
+	return (
+		<div className='px-5'>
+			<h2>Pokemon Files: </h2>
+			{pokemonsQuery.isLoading || pokemonsQuery.isPending ? (
+				'Loading...'
+			) : (
+				<Row>
+					{pokemonQuery.map(({ data }) => (
+						<Col xs={3} key={data?.id} className='card'>
+							<Card className='border mb-2'>
+								<Card.Img
+									variant='top'
+									src={data?.sprites.front_default}
+									className='w-auto'
+								></Card.Img>
+								<Card.Title className='d-flex justify-content-center'>
+									{data?.name && capitalize(data.name)}
+								</Card.Title>
+							</Card>
+						</Col>
+					))}
+				</Row>
+			)}
+		</div>
+	);
 }
 
-export default App
+export default App;
