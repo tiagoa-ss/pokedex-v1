@@ -1,10 +1,11 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Col, Row, Card } from 'react-bootstrap';
+import { Col, Row, Card, Image } from 'react-bootstrap';
 
 import { usePokemon, usePokemons } from './services/queries';
-import { capitalize } from './utils/capitalizee';
+import { capitalize } from './utils/capitalize';
+import { PokemonTypes, PokemonTypesMap } from './types/pokemonTypes.enum';
 
 function App() {
 	const pokemonsQuery = usePokemons();
@@ -25,16 +26,23 @@ function App() {
 			) : (
 				<Row>
 					{pokemonQuery.map(({ data }) => (
-						<Col xs={3} key={data?.id} className='card'>
-							<Card className='border mb-2'>
+						<Col xs={3} key={data?.id}>
+							<Card className='border mb-2 d-flex align-items-center'>
 								<Card.Img
 									variant='top'
-									src={data?.sprites.front_default}
-									className='w-auto'
+									src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data?.id}.png`}
+									className='w-75'
 								></Card.Img>
-								<Card.Title className='d-flex justify-content-center'>
-									{data?.name && capitalize(data.name)}
-								</Card.Title>
+								<Card.Title>{data?.name && capitalize(data.name)}</Card.Title>
+								<Card.Subtitle className='d-flex gap-1'>
+									{data?.types.map((types) => (
+										<Image
+											src={PokemonTypesMap.get(types.type.name as PokemonTypes)}
+											style={{ maxWidth: '25px' }}
+											className='py-2'
+										/>
+									))}
+								</Card.Subtitle>
 							</Card>
 						</Col>
 					))}

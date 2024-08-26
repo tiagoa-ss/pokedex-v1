@@ -6,7 +6,7 @@ const axiosInstance = axios.create({ baseURL: 'https://pokeapi.co/api/v2' });
 
 export const getPokemonList = async () => {
 	return (
-		await axiosInstance.get<PokemonListResponse>('pokemon?limit=12&offset=0')
+		await axiosInstance.get<PokemonListResponse>('pokemon?limit=20&offset=0')
 	).data;
 };
 
