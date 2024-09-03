@@ -1,7 +1,7 @@
 import { Switch } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import starsIcon from '../../assets/stars.svg';
-import starsBlackIcon from '../../assets/stars-black.svg';
+import starsBlackIcon from '/stars-black.svg';
 
 interface ICustomSwitch {
 	toggleShiny: () => void;
